@@ -42,6 +42,8 @@ helpers:
 - helpers/**/*.coffee
 - ../../vendor/jasmine-sinon/lib/sinon-1.3.1/sinon-1.3.1.js
 - ../../vendor/jasmine-sinon/lib/jasmine-sinon.js
+- ../../vendor/jasmine-dom/lib/jasmine-dom-fixtures.js
+- ../../vendor/jasmine-dom/lib/jasmine-dom-matchers.js
 
 # spec_files
 #

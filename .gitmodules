@@ -1,3 +1,6 @@
 [submodule "vendor/jasmine-sinon"]
 	path = vendor/jasmine-sinon
 	url = git://github.com/froots/jasmine-sinon.git
+[submodule "vendor/jasmine-dom"]
+	path = vendor/jasmine-dom
+	url = git://github.com/jeffwatkins/jasmine-dom.git
