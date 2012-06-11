@@ -1,0 +1,4 @@
+if exports?
+
+else
+  @exports = {}
