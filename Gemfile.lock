@@ -51,6 +51,8 @@ GEM
       rb-inotify (~> 0.8.8)
     multi_json (1.3.6)
     rack (1.4.1)
+    rack-contrib (1.1.0)
+      rack (>= 0.9.1)
     rainbow (1.1.4)
     rb-fchange (0.0.5)
       ffi
@@ -91,3 +93,6 @@ DEPENDENCIES
   guard-jasmine-headless-webkit!
   jasmine
   jasmine-headless-webkit!
+  rack
+  rack-contrib
+  sprockets
