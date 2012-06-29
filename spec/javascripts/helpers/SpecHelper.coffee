@@ -8,6 +8,16 @@ beforeEach ->
           "undefined does not match #{expectedClass.name}"
 
       @actual instanceof expectedClass
+
+    toVerify: (mock) ->
+      @actual?()
+
+      @message = ->
+        ["Expected not to fail but failed",
+         "Expect to fail but passed"]
+
+      mock.verify()
+
     toChange: () ->
       if arguments[0] instanceof Function
         @expressionMessage = @expression = arguments[0]
