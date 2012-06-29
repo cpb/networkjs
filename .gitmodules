@@ -4,3 +4,6 @@
 [submodule "vendor/jasmine-dom"]
 	path = vendor/jasmine-dom
 	url = git://github.com/jeffwatkins/jasmine-dom.git
+[submodule "vendor/coffee-script"]
+	path = vendor/coffee-script
+	url = git://github.com/jashkenas/coffee-script.git

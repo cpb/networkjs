@@ -6,6 +6,7 @@ map '/js' do
   environment = Sprockets::Environment.new
   environment.append_path 'app/assets/javascripts'
   environment.append_path 'public/javascripts'
+  environment.append_path 'vendor/coffee-script/lib'
 
   run environment
 end
