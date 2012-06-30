@@ -7,5 +7,10 @@ class EventedForceLayout extends DelegateClass.factory('nodes','links','size','l
 
   constructor: (force,attributes) ->
     super(force,attributes)
+    force.on("tick", attributes.onTick) if attributes.onTick?
+    @drag = force.drag
+
+  start: ->
+    @target.start()
 
 exports.EventedForceLayout = EventedForceLayout
