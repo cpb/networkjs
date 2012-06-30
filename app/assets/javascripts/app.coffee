@@ -30,7 +30,6 @@ svg = d3.select("#chart").append("svg")
   .attr("width", width)
   .attr("height", height)
 
-
 restart = (svg,force,links,nodes) ->
   force.start()
   updateLinkPosition(buildLinks(svg,links))

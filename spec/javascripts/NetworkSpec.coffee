@@ -78,5 +78,3 @@ describe "Network", ->
       it "should add a link", ->
         expect(addNode(neighbour)).toChange(network.links, 'length')
         expect(network.links).toContain({source: node, target: neighbour})
-
-
