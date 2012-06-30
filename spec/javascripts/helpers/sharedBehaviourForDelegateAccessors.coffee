@@ -48,7 +48,6 @@ exports.sharedBehaviourForDelegateAccessors = (sharedSetup) ->
       delegationTarget = context.delegationTarget()
       initialize = context.initialize
       initialized = context.initialized
-      debugger
       target = sinon.mock(context.delegationTarget())
       value = context.value
       accessor_value[accessor] = value
