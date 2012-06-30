@@ -20,27 +20,86 @@ describe "Network", ->
     it "should return an array", ->
       expect(network.links).toBeA(Array)
 
+  describe "#nodesExist", ->
+    ninetyNine = undefined
+    eightyEight = undefined
+    seventySeven = undefined
+    sixtySix = undefined
+
+    beforeEach ->
+      ninetyNine = {index: 99}
+      eightyEight = {index: 88}
+      seventySeven = {index: 77}
+      sixtySix = {index: 66}
+
+      network.addNode(ninetyNine)
+      network.addNode(eightyEight)
+      network.addNode(seventySeven)
+
+    describe "with each present", ->
+      it "should be true", ->
+        expect(network.nodesExist(ninetyNine)).toBeTruthy()
+        expect(network.nodesExist(eightyEight)).toBeTruthy()
+        expect(network.nodesExist(seventySeven)).toBeTruthy()
+        expect(network.nodesExist(ninetyNine,eightyEight)).toBeTruthy()
+        expect(network.nodesExist(eightyEight,seventySeven)).toBeTruthy()
+        expect(network.nodesExist(seventySeven,ninetyNine)).toBeTruthy()
+        expect(network.nodesExist(ninetyNine,eightyEight,seventySeven)).toBeTruthy()
+        expect(network.nodesExist(eightyEight,seventySeven,ninetyNine)).toBeTruthy()
+        expect(network.nodesExist(seventySeven,ninetyNine,eightyEight)).toBeTruthy()
+
+    describe "with some missing", ->
+      it "should be false", ->
+        expect(network.nodesExist(sixtySix)).toBeFalsy()
+        expect(network.nodesExist(ninetyNine,sixtySix)).toBeFalsy()
+        expect(network.nodesExist(sixtySix,seventySeven)).toBeFalsy()
+        expect(network.nodesExist(ninetyNine,eightyEight,sixtySix)).toBeFalsy()
+        expect(network.nodesExist(eightyEight,sixtySix,ninetyNine)).toBeFalsy()
+        expect(network.nodesExist(sixtySix,ninetyNine,eightyEight)).toBeFalsy()
+
   describe "#addLink", ->
     link = undefined
 
     beforeEach ->
-      link = {source: 'a', target: 'b'}
+      link = {source: {index: 99}, target: {index: 88}}
 
     addLink = (link) ->
       ->
         network.addLink(link.source, link.target)
-
-    it "should add the link to #links", ->
-      expect(addLink(link)).toChange(network.links, 'length')
-
-    it "should emit a newLink event", ->
-      expect(addLink(link)).toEmitWith(network,'newLink',{source: 'a', target: 'b'})
 
     describe "adds only unique links", ->
       beforeEach ->
         addLink(link)()
 
       it "should not add the link to #links", ->
+        expect(addLink(link)).not.toChange(network.links, 'length')
+
+      it "should not emit a newLink event", ->
+        expect(addLink(link)).not.toEmitWith(network,'newLink',link)
+
+    describe "when both nodes are present", ->
+      beforeEach ->
+        network.addNode({index: 88})
+        network.addNode({index: 99})
+
+      it "should add the link to #links", ->
+        expect(addLink(link)).toChange(network.links, 'length')
+
+      it "should emit a newLink event", ->
+        expect(addLink(link)).toEmitWith(network,'newLink',link)
+
+    describe "when both nodes are missing", ->
+      it "should not add the links to #links", ->
+        expect(addLink(link)).not.toChange(network.links, 'length')
+
+      it "should not emit a newLink event", ->
+        expect(addLink(link)).not.toEmitWith(network,'newLink',link)
+
+    describe "when one node is present", ->
+      beforeEach ->
+        network.addNode({index: 88})
+
+      it "should not add the links to #links", ->
         expect(addLink(link)).not.toChange(network.links, 'length')
 
       it "should not emit a newLink event", ->
@@ -70,6 +129,18 @@ describe "Network", ->
     describe "with a node which does not have its neighbours added yet", ->
       it "should not have any neighbours", ->
         expect(addNode(node)).not.toChange(network.links, 'length')
+
+      describe "and then its neighbours arrive", ->
+        beforeEach ->
+          addNode(node)()
+
+        describe "with a reference to the waiting node", ->
+          it "should then have a neighbour", ->
+            expect(addNode(neighbour)).toChange(network.links, 'length')
+
+        describe "without a reference to the waiting node", ->
+          it "should then have a neighbour", ->
+            expect(addNode(except(neighbour, 'sources'))).toChange(network.links, 'length')
 
     describe "with a node which has all its neighbours waiting for it", ->
       beforeEach ->

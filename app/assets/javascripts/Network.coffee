@@ -11,8 +11,8 @@ class Network extends EventEmitter
 
   addNode: (node) ->
     unless @nodeExists(node)
-      @emit 'newNode', node
       @nodes.push(node)
+      @emit 'newNode', node
 
   addToNetwork: (node) =>
     if node.targets?
@@ -24,10 +24,14 @@ class Network extends EventEmitter
         @addLink(source, node)
 
   addLink: (source, target) ->
-    unless @linkExists(source, target)
+    if not @linkExists(source, target) and @nodesExist(source, target)
       link = {source: source, target: target}
-      @emit 'newLink', link
       @links.push(link)
+      @emit 'newLink', link
+
+  nodesExist: (nodes...) ->
+    nodes.every (node) =>
+      @nodeExists(node)
 
   nodeExists: (node) ->
     @nodes.some (known) ->

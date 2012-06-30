@@ -8,24 +8,6 @@ height = 500
 
 color = d3.scale.category20()
 
-net = new exports.Network()
-
-nodes = []
-links = []
-
-force = new exports.EventedForceLayout(d3.layout.force(),
-  charge: -240
-  linkDistance: 30
-  nodes: nodes
-  links: links
-  size: [width, height]
-  onTick: ->
-    updateLinkPosition(svg.selectAll("line.link"))
-    updateNodePosition(svg.selectAll("g.node"))
-)
-
-exports.force = force
-
 svg = d3.select("#chart").append("svg")
   .attr("width", width)
   .attr("height", height)
@@ -70,34 +52,40 @@ updateLinkPosition = (links) ->
 updateNodePosition = (nodes) ->
   nodes.attr("transform", (d) -> "translate("+d.x+","+d.y+")")
 
+network = new exports.Network()
+network.on("newNode", ->
+  restart(svg,force,@links,@nodes))
+
+force = new exports.EventedForceLayout(d3.layout.force(),
+  charge: -240
+  linkDistance: 30
+  nodes: network.nodes
+  links: network.links
+  size: [width, height]
+  onTick: ->
+    updateLinkPosition(svg.selectAll("line.link"))
+    updateNodePosition(svg.selectAll("g.node"))
+)
+
+exports.force = force
 
 d3.json "miserables.json", (json) ->
-  undrawnNodes = json.nodes
+  undrawnNodes = json.nodes.map (node,i) ->
+    node.index = i
+    node.targets = []
+    node.sources = []
+    json.links.forEach (link,i) ->
+      if link.source == node.index
+        node.targets.push(link.target)
+
+      if link.target == node.index
+        node.sources.push(link.source)
+
+    node
+
   undrawnLinks = json.links
 
   svg.on "mousedown", () ->
     newNode = undrawnNodes.pop()
-    if newNode?
-      newNode.index = undrawnNodes.length
+    network.addNode(newNode) if newNode?
 
-      newLinks = undrawnLinks.filter (link,i,set) ->
-        (link.source == newNode.index || link.target == newNode.index)
-
-      targets = []
-      sources = []
-
-      newLinks.forEach (link,i,set) ->
-        if link.source == newNode.index
-          targets.push(link)
-        else
-          sources.push(link)
-
-      nodes.forEach (node,i,set) ->
-        if targets.some((link,i,set) -> link.target == node.index)
-          links.push({source: newNode, target: node})
-        else if sources.some((link,i,set) -> link.source == node.index)
-          links.push({target: newNode, source: node})
-
-      nodes.push(newNode)
-
-      restart(svg,force,links,nodes)
