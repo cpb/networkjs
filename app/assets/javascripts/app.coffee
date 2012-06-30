@@ -1,5 +1,6 @@
 #= require commonjs
 #= require Network
+#= require EventedForceLayout
 #= require d3.v2
 
 width = 960
@@ -12,19 +13,18 @@ net = new exports.Network()
 nodes = []
 links = []
 
-force = d3.layout.force()
-  .charge(-240)
-  .linkDistance(30)
-  .nodes(nodes)
-  .links(links)
-  .size([width, height])
-  .on "tick", ->
+force = new exports.EventedForceLayout(d3.layout.force(),
+  charge: -240
+  linkDistance: 30
+  nodes: nodes
+  links: links
+  size: [width, height]
+  onTick: ->
     updateLinkPosition(svg.selectAll("line.link"))
     updateNodePosition(svg.selectAll("g.node"))
+)
 
 exports.force = force
-for own prop, value in force
-  console.log(prop,value)
 
 svg = d3.select("#chart").append("svg")
   .attr("width", width)
