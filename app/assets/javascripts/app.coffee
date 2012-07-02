@@ -53,8 +53,10 @@ updateNodePosition = (nodes) ->
   nodes.attr("transform", (d) -> "translate("+d.x+","+d.y+")")
 
 network = new exports.Network()
-network.on("newNode", ->
-  restart(svg,force,@links,@nodes))
+network.on "newNode", ->
+  restart(svg,force,network.links,network.nodes)
+network.on "newLink", ->
+  restart(svg,force,network.links,network.nodes)
 
 force = new exports.EventedForceLayout(d3.layout.force(),
   charge: -240

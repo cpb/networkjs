@@ -7,6 +7,7 @@ class Network extends EventEmitter
   constructor: ->
     @nodes = []
     @links = []
+    @setMaxListeners(1000000000)
     @on 'newNode', @addToNetwork
 
   addNode: (node) ->
@@ -16,12 +17,14 @@ class Network extends EventEmitter
 
   addToNetwork: (node) =>
     if node.targets?
-      @nodesByIndex(node.targets...).forEach (target) =>
-        @addLink(node, target)
+      node.targets.forEach (targetIndex) =>
+        @onNodeArrival {index: targetIndex}, (target) =>
+          @addLink(node, target)
 
     if node.sources?
-      @nodesByIndex(node.sources...).forEach (source) =>
-        @addLink(source, node)
+      node.sources.forEach (sourceIndex) =>
+        @onNodeArrival {index: sourceIndex}, (source) =>
+          @addLink(node, source)
 
   addLink: (source, target) ->
     if not @linkExists(source, target) and @nodesExist(source, target)
