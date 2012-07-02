@@ -8,6 +8,7 @@ class Network extends EventEmitter
     @nodes = []
     @links = []
     @setMaxListeners(1000000000)
+
     @on 'newNode', @addToNetwork
 
   addNode: (node) ->

@@ -70,6 +70,7 @@ force = new exports.EventedForceLayout(d3.layout.force(),
 )
 
 exports.force = force
+exports.network = network
 
 d3.json "miserables.json", (json) ->
   undrawnNodes = json.nodes.map (node,i) ->
@@ -86,6 +87,10 @@ d3.json "miserables.json", (json) ->
     node
 
   undrawnLinks = json.links
+
+  exports.json = json
+  exports.undrawnNodes = undrawnNodes
+  exports.undrawnLinks = undrawnLinks
 
   svg.on "mousedown", () ->
     newNode = undrawnNodes.shift()
