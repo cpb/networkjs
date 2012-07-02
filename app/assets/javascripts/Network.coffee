@@ -24,7 +24,7 @@ class Network extends EventEmitter
     if node.sources?
       node.sources.forEach (sourceIndex) =>
         @onNodeArrival {index: sourceIndex}, (source) =>
-          @addLink(node, source)
+          @addLink(source, node)
 
   addLink: (source, target) ->
     if not @linkExists(source, target) and @nodesExist(source, target)

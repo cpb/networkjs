@@ -88,6 +88,6 @@ d3.json "miserables.json", (json) ->
   undrawnLinks = json.links
 
   svg.on "mousedown", () ->
-    newNode = undrawnNodes.pop()
+    newNode = undrawnNodes.shift()
     network.addNode(newNode) if newNode?
 
