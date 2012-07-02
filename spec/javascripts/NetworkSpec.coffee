@@ -165,7 +165,19 @@ describe "Network", ->
       it "should not have any neighbours", ->
         expect(addNode(node)).not.toChange(network.links, 'length')
 
-      describe "and then its neighbours arrive", ->
+      describe "and then its source neighbours arrive", ->
+        beforeEach ->
+          addNode(neighbour)()
+
+        describe "with a reference to the waiting node", ->
+          it "should then have a neighbour", ->
+            expect(addNode(node)).toChange(network.links, 'length')
+
+        describe "without a reference to the waiting node", ->
+          it "should then have a neighbour", ->
+            expect(addNode(except(node, 'targets'))).toChange(network.links, 'length')
+
+      describe "and then its target neighbours arrive", ->
         beforeEach ->
           addNode(node)()
 
