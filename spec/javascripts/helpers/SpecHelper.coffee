@@ -16,7 +16,10 @@ beforeEach ->
         ["Expected not to fail but failed",
          "Expect to fail but passed"]
 
-      mock.verify()
+      if mock instanceof Function
+        mock()
+      else
+        mock.verify()
 
     toChange: () ->
       if arguments[0] instanceof Function

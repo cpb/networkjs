@@ -29,6 +29,17 @@ class Network extends EventEmitter
       @links.push(link)
       @emit 'newLink', link
 
+  onNodeArrival: (waitingNode,responder) ->
+    if @nodeExists(waitingNode)
+      responder.apply(this, @nodesByIndex(waitingNode.index))
+    else
+      eventResponder = (node) =>
+        if node.index == waitingNode.index
+          @removeListener 'newNode', eventResponder
+          responder.apply(this,[node])
+
+      @on 'newNode', eventResponder
+
   nodesExist: (nodes...) ->
     nodes.every (node) =>
       @nodeExists(node)

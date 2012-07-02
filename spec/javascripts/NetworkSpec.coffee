@@ -105,6 +105,41 @@ describe "Network", ->
       it "should not emit a newLink event", ->
         expect(addLink(link)).not.toEmitWith(network,'newLink',link)
 
+  describe "#onNodeArrival", ->
+    spy = undefined
+    beforeEach ->
+      spy = sinon.spy()
+
+    describe "when the node is not yet there", ->
+      beforeEach ->
+        network.onNodeArrival({index: node.index},spy)
+
+      it "should invoke responders for the node", ->
+        expect(->
+          network.emit("newNode",node)
+        ).toVerify(-> spy.calledWith(node) and spy.calledOn(network))
+
+      it "should not invoke responders for other nodes", ->
+        expect(->
+          network.emit("newNode",neighbour)
+        ).not.toVerify(-> spy.calledWith(node) and spy.calledOn(network))
+
+      it "should only invoke responders once", ->
+        network.emit("newNode",node)
+        spy.reset()
+        expect(->
+          network.emit("newNode",node)
+        ).not.toVerify(-> spy.calledWith(node) and spy.calledOn(network))
+
+    describe "when the node is already there", ->
+      beforeEach ->
+        network.addNode(node)
+
+      it "should invoke responder right away", ->
+        expect(->
+          network.onNodeArrival({index: node.index},spy)
+        ).toVerify(-> spy.calledWith(node) and spy.calledOn(network))
+
   describe "#addNode", ->
     addNode = (node) ->
       ->
