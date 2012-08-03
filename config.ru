@@ -7,6 +7,7 @@ map '/js' do
   environment.append_path 'app/assets/javascripts'
   environment.append_path 'public/javascripts'
   environment.append_path 'vendor/coffee-script/lib'
+  environment.append_path 'vendor/underscore/'
 
   run environment
 end

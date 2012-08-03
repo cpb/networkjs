@@ -39,6 +39,7 @@ stylesheets:
 #
 helpers:
 - ../../app/assets/javascripts/commonjs.coffee
+- ../../vendor/underscore/underscore.js
 - ../../vendor/coffee-script/lib/coffee-script/helpers.js
 - helpers/**/*.js
 - helpers/**/*.coffee
