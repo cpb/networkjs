@@ -96,3 +96,7 @@ d3.json "miserables.json", (json) ->
     newNode = undrawnNodes.shift()
     network.addNode(newNode) if newNode?
 
+exports.subset = {}
+
+d3.json "subset.json", (json) ->
+  exports.subset = json
