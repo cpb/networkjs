@@ -26,8 +26,8 @@ namespace :g do
   task :class, [:name] do |t, args|
     raise "You need to provide a name" unless args.name
 
-    puts "creating public/javascripts/#{args.name}.js"
-    Pathname.new("public/javascripts/#{args.name}.coffee").open('w') do |file|
+    puts "creating app/assets/javascripts/#{args.name}.coffee"
+    Pathname.new("app/assets/javascripts/#{args.name}.coffee").open('w') do |file|
       file.write(<<-END)
 #= require commonjs
 
@@ -38,7 +38,7 @@ exports.#{args.name} = #{args.name}
 END
     end
 
-    puts "creating spec/javascripts/#{args.name}_spec.js"
+    puts "creating spec/javascripts/#{args.name}Spec.coffee"
     Pathname.new("spec/javascripts/#{args.name}Spec.coffee").open('w') do |file|
       file.write(<<-END)
 #= require #{args.name}
