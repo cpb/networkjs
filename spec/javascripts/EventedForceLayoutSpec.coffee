@@ -79,6 +79,30 @@ describe "EventedForceLayout", ->
         force.tick()
       ).toEmitWith(eventedForce,"tick",type: "tick", alpha: 0.099)
 
+    it "should call each tick handler", ->
+      firstHandler = sinon.spy()
+      secondHandler = sinon.spy()
+
+      eventedForce.on("tick",firstHandler)
+      eventedForce.on("tick",secondHandler)
+
+      eventedForce.start()
+
+      expect( ->
+        force.tick()
+      ).toVerify ->
+        firstHandler.called && secondHandler.called
+
+    it "should call the initialized tick handler", ->
+      initializedHandler = sinon.spy()
+      eventedForce = new EventedForceLayout(force, _.extend(attributes,onTick: initializedHandler))
+
+      eventedForce.start()
+      expect( ->
+        force.tick()
+      ).toVerify ->
+        initializedHandler.called
+
   delegateAccessors = [
     {accessor: "nodes", value: ["foo"]}
     {accessor: "links", value: ["foo"]}
