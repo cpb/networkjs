@@ -54,6 +54,7 @@ GEM
     rack-contrib (1.1.0)
       rack (>= 0.9.1)
     rainbow (1.1.4)
+    rake (10.0.3)
     rb-fchange (0.0.5)
       ffi
     rb-fsevent (0.9.1)
@@ -95,4 +96,5 @@ DEPENDENCIES
   jasmine-headless-webkit!
   rack
   rack-contrib
+  rake
   sprockets
